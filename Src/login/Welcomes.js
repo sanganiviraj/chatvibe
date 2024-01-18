@@ -1,14 +1,21 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { responsiveFontSize, responsiveHeight, responsiveScreenFontSize, responsiveScreenHeight, responsiveScreenWidth, responsiveWidth } from 'react-native-responsive-dimensions'
+import LottieView from 'lottie-react-native'
 
 const Welcomes = ({navigation}) => {
   return (
     <View style={styles.screen}>
 
-      <Image 
+      {/* <Image 
         style={styles.img}
-        source={require('../assets/images/bg.png')}/>
+        source={require('../assets/images/bg.png')}/> */}
+
+      <LottieView
+        source={require('../assets/Lottyfile/Animation4.json')}
+        loop
+        style={styles.img}
+        autoPlay/>
 
       <Text style={styles.title}>Let's You in</Text>
 

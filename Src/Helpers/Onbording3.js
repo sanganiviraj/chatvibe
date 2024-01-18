@@ -10,7 +10,7 @@ const Onboarding3 = ({navigation}) => {
 
 
   const handleNextPress = () => {
-        navigation.push('Welcome');
+      navigation.push('welcome');
   };
 
   return (
@@ -22,6 +22,7 @@ const Onboarding3 = ({navigation}) => {
           source={require('../assets/Lottyfile/Animation -3.json')}
           loop
           style={styles.animation}
+          autoPlay
         />
       </View>
 

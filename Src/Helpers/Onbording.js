@@ -24,6 +24,7 @@ const Onboarding = ({navigation}) => {
         <LottieView
           source={require('../assets/Lottyfile/Animation1.json')}
           loop
+          autoPlay
           style={styles.animation}
         />
       </View>
