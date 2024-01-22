@@ -1,7 +1,11 @@
-import { StyleSheet, Text, View,TextInput, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View,TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import { responsiveFontSize, responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions'
 import Icon, { Icons } from '../assets/constant/Icons'
+import auth  from '@react-native-firebase/auth';
+import { create } from 'react-test-renderer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Toast, useToast } from 'react-native-toast-notifications';
 // import { TextInput } from 'react-native-gesture-handler'
 
 const Signupscreen = ({navigation}) => {
@@ -12,26 +16,95 @@ const Signupscreen = ({navigation}) => {
 
     const [email,setemail] = useState('');
     const [name,setname] = useState('')
-    const [password,setpassword] = useState();
+    const [password,setpassword] = useState('');
+    const toast = useToast();
+
+    //check validation and Signup in firebase
+    const createuser = () => {
+
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+
+        if (reg.test(email) === false || email === '') {
+
+            toast.show("Please Enter Valid Email", {
+                type: "danger",
+                placement: "bottom",
+                duration: 4000,
+                offset: 30,
+                animationType: "slide-in",
+                offsetBottom: 70
+            });
+
+            toast.hideAll()
+
+        } else if (password === '' || password.length < 8 || password.length > 12) {
+
+            toast.show("Password must be 8 to 12 character", {
+                type: "danger",
+                placement: "bottom",
+                duration: 4000,
+                offset: 30,
+                animationType: "slide-in",
+                offsetBottom: 70
+            });
+
+            toast.hideAll()
+        }
+        else{
+
+            auth()
+                .createUserWithEmailAndPassword(email, password)
+                .then(() => {
+                    AsyncStorage.setItem("email",email)
+                    console.log('User account created & signed in!');
+                    navigation.push("bottomnavigation")
+                })
+                .catch(error => {
+                    if (error.code === 'auth/email-already-in-use') {
+                        toast.show("The email address is already in use", {
+                            type: "danger",
+                            placement: "bottom",
+                            duration: 4000,
+                            offset: 30,
+                            animationType: "slide-in",
+                            offsetBottom:70
+                        });
+                        toast.hideAll()
+                    }
+
+                    if (error.code === 'auth/invalid-email') {
+                        toast.show("Email address Invalid Formate", {
+                            type: "danger",
+                            placement: "bottom",
+                            duration: 4000,
+                            offset: 30,
+                            animationType: "slide-in",
+                            offsetBottom:70
+                        });
+                    }
+
+                    if (error.code === 'auth/network-request-failed') {
+                        toast.show("Network Error", {
+                            type: "warning",
+                            placement: "bottom",
+                            duration: 4000,
+                            offset: 30,
+                            animationType: "slide-in",
+                            offsetBottom:70
+                        });
+                    }
+
+                    console.error(error);
+                });
+        }
+    }
 
   return (
-    <View style={styles.screen}>
+    <KeyboardAvoidingView behavior="height" style={styles.screen} enabled >
+       
         <Text style={styles.title}>Create Your Account</Text>
 
-        <TouchableOpacity style={[styles.box,{backgroundColor: namepress ? "rgba(224,186,244,0.2)" : "#35383F" , borderColor :  namepress ? "#9D4EDD" : "#35383F" , marginTop:responsiveScreenHeight(10) }]} onPress={() => {}}>
-            <Icon type={Icons.Ionicons} name="person" color={namepress ? "#9D4EDD" : "#9E9E9E"} size={responsiveFontSize(4)} style={{marginHorizontal:responsiveScreenWidth(5)}}/>
-            <TextInput 
-                style={styles.inputstyle}
-                onFocus={() => {setnamepress(true)}}
-                onBlur={() => {setnamepress(false)}}
-                placeholder='Enter name'
-                maxLength={50}
-                onChangeText={(text) => setname(text)}
-                value={name}
-            />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.box,{backgroundColor: emailpress ? "rgba(224,186,244,0.2)" : "#35383F" , borderColor :  emailpress ? "#9D4EDD" : "#35383F" }]} onPress={() => {}}>
+        <TouchableOpacity style={[styles.box,{backgroundColor: emailpress ? "rgba(224,186,244,0.2)" : "#35383F" , borderColor :  emailpress ? "#9D4EDD" : "#35383F",marginTop:responsiveScreenHeight(10) }]} onPress={() => {}}>
             <Icon type={Icons.MaterialCommunityIcons} name="email" color={emailpress ? "#9D4EDD" : "#9E9E9E"} size={responsiveFontSize(4)} style={{marginHorizontal:responsiveScreenWidth(5)}}/>
             <TextInput 
                 style={styles.inputstyle}
@@ -66,12 +139,13 @@ const Signupscreen = ({navigation}) => {
 
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.btn} onPress={() => {}}>
+        <TouchableOpacity style={styles.btn} onPress={() => {createuser()}}>
             <Text style={styles.btntitle}>Sign Up</Text>
         </TouchableOpacity>
 
         <Text style={[styles.btntitle,{marginTop:responsiveScreenHeight(3),alignSelf:'center'}]}>Already have an account?<Text style={{fontSize:responsiveFontSize(2.5),color:"#9D4EDD",fontFamily:'Outfit-Medium'}} onPress={() => {navigation.push("login")}}> Sign in </Text></Text>
-    </View>
+        
+    </KeyboardAvoidingView>
   )
 }
 
@@ -119,6 +193,6 @@ const styles = StyleSheet.create({
     btntitle:{
         fontSize:responsiveFontSize(2),
         color:"white",
-        fontFamily:'Outfit-Regular'
+        fontFamily:'Outfit-Regular',
     },
 })

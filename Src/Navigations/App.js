@@ -1,27 +1,38 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import Onboarding from './Helpers/Onbording';
-import Onboarding2 from './Helpers/Onbording2';
-import Onboarding3 from './Helpers/Onbording3';
-import Welcome from './Helpers/Welcome';
-import Welcomes from './login/Welcomes';
-import Signupscreen from './login/Signupscreen';
-import Loginscreen from './login/Loginscreen';
-import Icon, { Icons } from './assets/constant/Icons';
+import Onboarding from '../Helpers/Onbording';
+import Onboarding2 from '../Helpers/Onbording2';
+import Onboarding3 from '../Helpers/Onbording3';
+import Welcome from '../Helpers/Welcome';
+import Welcomes from '../login/Welcomes';
+import Signupscreen from '../login/Signupscreen';
+import Loginscreen from '../login/Loginscreen';
+import Icon, { Icons } from '../assets/constant/Icons';
 import { responsiveFontSize, responsiveWidth } from 'react-native-responsive-dimensions';
 import { TouchableOpacity } from 'react-native';
+import Splashscreen from '../Helpers/Splashscreen';
+import Bottomnavigation from './Bottomnavigation';
+import { ToastProvider } from 'react-native-toast-notifications';
+
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator >
-        <Stack.Screen component={Welcomestack} name='welcomestack' options={{headerShown:false}}/>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ToastProvider 
+      offsetBottom={60}
+      swipeEnabled={true}
+      warningIcon={<Icon type={Icons.MaterialCommunityIcons} name="network-strength-off"/>}
+    >
+      <NavigationContainer>
+        <Stack.Navigator >
+          <Stack.Screen component={Welcomestack} name='welcomestack' options={{headerShown:false}}/>
+          <Stack.Screen component={Bottomnavigation} name="bottomnavigation" options={{headerShown:false}} />        
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ToastProvider>
   );
 };
 
@@ -30,12 +41,19 @@ const App = () => {
 const Welcomestack = ({navigation}) =>{
   return(
     <Stack.Navigator 
-      initialRouteName="Onboarding"
+      initialRouteName="splashscreen"
       screenOptions={{
-        
         ...TransitionPresets.SlideFromRightIOS, 
       }}>
-      <Stack.Screen
+        <Stack.Screen
+          name="splashscreen"
+          component={Splashscreen}
+          options={{
+            title: 'splashscreen', 
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
           name="Onboarding"
           component={Onboarding}
           options={{
@@ -98,5 +116,7 @@ const Welcomestack = ({navigation}) =>{
 }
 
 // Bottomnavigation = Video + chat + profile
+
+
 
 export default App;

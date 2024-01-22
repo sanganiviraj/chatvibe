@@ -2,15 +2,97 @@ import { StyleSheet, Text, View,TextInput, TouchableOpacity } from 'react-native
 import React, { useState } from 'react'
 import { responsiveFontSize, responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions'
 import Icon, { Icons } from '../assets/constant/Icons'
+import auth  from '@react-native-firebase/auth';
+import { useToast } from 'react-native-toast-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { TextInput } from 'react-native-gesture-handler'
 
 const Loginscreen = ({navigation}) => {
     const [emailpress,setemailpress] = useState(false);
     const [passwordpress , setpasswordpress] = useState(false)
     const [eyefocus , seteyefocus] = useState(true);
+    const toast = useToast()
 
     const [email,setemail] = useState('');
-    const [password,setpassword] = useState();
+    const [password,setpassword] = useState('');
+
+    //check validation and Signin in firebase
+    const checkuser = ( ) => {
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+
+        if (reg.test(email) === false || email === '') {
+
+            toast.show("Please Enter Valid Email", {
+                type: "danger",
+                placement: "bottom",
+                duration: 4000,
+                offset: 30,
+                animationType: "slide-in",
+                offsetBottom: 70
+            });
+
+            toast.hideAll()
+
+        } else if (password === '' || password.length < 8 || password.length > 12) {
+
+            toast.show("Password must be 8 to 12 character", {
+                type: "danger",
+                placement: "bottom",
+                duration: 4000,
+                offset: 30,
+                animationType: "slide-in",
+                offsetBottom: 70
+            });
+
+            toast.hideAll()
+        }
+        else {
+            auth()
+                .signInWithEmailAndPassword(email, password)
+                .then((res) => {
+                    AsyncStorage.setItem("email", email)
+                    console.log("res");
+                    navigation.push("bottomnavigation");
+                })
+                .catch((error) => {
+                    if (error.code === 'auth/email-already-in-use') {
+                        toast.show("The email address is already in use", {
+                            type: "danger",
+                            placement: "bottom",
+                            duration: 4000,
+                            offset: 30,
+                            animationType: "slide-in",
+                            offsetBottom: 70
+                        });
+                        toast.hideAll()
+                    }
+
+                    if (error.code === 'auth/invalid-email') {
+                        toast.show("Email address Invalid Formate", {
+                            type: "danger",
+                            placement: "bottom",
+                            duration: 4000,
+                            offset: 30,
+                            animationType: "slide-in",
+                            offsetBottom: 70
+                        });
+                    }
+
+                    if (error.code === 'auth/network-request-failed') {
+                        toast.show("Network Error", {
+                            type: "warning",
+                            placement: "bottom",
+                            duration: 4000,
+                            offset: 30,
+                            animationType: "slide-in",
+                            offsetBottom: 70
+                        });
+                    }
+
+                    console.log("error => ", error);
+                })
+        }
+    }
 
   return (
     <View style={styles.screen}>
@@ -40,7 +122,7 @@ const Loginscreen = ({navigation}) => {
                 secureTextEntry={eyefocus}
                 keyboardType='number-pad'
                 placeholder='Password'
-                maxLength={10}
+                maxLength={12}
                 onChangeText={(text) => setpassword(text) }
                 value={password}
             />
@@ -51,7 +133,7 @@ const Loginscreen = ({navigation}) => {
 
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.btn} onPress={() => {}}>
+        <TouchableOpacity style={styles.btn} onPress={() => {checkuser()}}>
             <Text style={styles.btntitle}>Sign In</Text>
         </TouchableOpacity>
 
