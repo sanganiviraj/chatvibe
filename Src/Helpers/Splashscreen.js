@@ -16,9 +16,9 @@ const Splashscreen = ({navigation}) => {
         console.log("check => " , check);
 
         if(check != null){
-            navigation.push("welcome")
+            navigation.replace("bottomnavigation")
         }else{
-            navigation.push("Onboarding")
+            navigation.replace("Onboarding")
         }
     }
 

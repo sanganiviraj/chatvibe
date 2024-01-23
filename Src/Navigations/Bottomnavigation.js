@@ -52,7 +52,7 @@ const TabButton = (props) => {
 
 }
 
-const Bottomnavigation = () => {
+const Bottomnavigation = ({navigation}) => {
   return (
     <Tab.Navigator 
           screenOptions={{

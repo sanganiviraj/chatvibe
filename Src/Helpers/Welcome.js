@@ -5,9 +5,6 @@ import LottieView from 'lottie-react-native';
 const { width, height } = Dimensions.get('window');
 
 const Welcome = ({ navigation }) => {
-    const handleNextPress = () => {
-        navigation.push('Onboarding2');
-    };
 
     return (
         <View style={styles.container}>

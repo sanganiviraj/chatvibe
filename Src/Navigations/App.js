@@ -15,11 +15,12 @@ import { TouchableOpacity } from 'react-native';
 import Splashscreen from '../Helpers/Splashscreen';
 import Bottomnavigation from './Bottomnavigation';
 import { ToastProvider } from 'react-native-toast-notifications';
+import VoiceCallPage from '../Helpers/Videocall';
 
 
 const Stack = createStackNavigator();
 
-const App = () => {
+const App = ({navigation}) => {
   return (
     <ToastProvider 
       offsetBottom={60}
@@ -80,6 +81,14 @@ const Welcomestack = ({navigation}) =>{
           <Stack.Screen
            name="welcome"
            component={Welcomes}
+           options={{
+            title: 'Welcome', 
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+           name="voicecall"
+           component={VoiceCallPage}
            options={{
             title: 'Welcome', 
             headerShown: false,

@@ -57,7 +57,7 @@ const Signupscreen = ({navigation}) => {
                 .then(() => {
                     AsyncStorage.setItem("email",email)
                     console.log('User account created & signed in!');
-                    navigation.push("bottomnavigation")
+                    navigation.replace("bottomnavigation")
                 })
                 .catch(error => {
                     if (error.code === 'auth/email-already-in-use') {

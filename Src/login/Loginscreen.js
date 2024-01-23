@@ -52,7 +52,7 @@ const Loginscreen = ({navigation}) => {
                 .then((res) => {
                     AsyncStorage.setItem("email", email)
                     console.log("res");
-                    navigation.push("bottomnavigation");
+                    navigation.replace("bottomnavigation");
                 })
                 .catch((error) => {
                     if (error.code === 'auth/email-already-in-use') {
