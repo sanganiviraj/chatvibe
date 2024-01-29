@@ -114,6 +114,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation 'com.google.android.gms:play-services-safetynet:18.0.1'
     implementation 'com.airbnb.android:lottie:$lottieVersion'
+    implementation project(':react-native-callkeep')
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
