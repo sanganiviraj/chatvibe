@@ -39,12 +39,12 @@
         </intent-filter>
       </activity>
 
-      <service android:name="io.wazo.callkeep.VoiceConnectionService"
+      <!-- <service android:name="io.wazo.callkeep.VoiceConnectionService"
         android:label="Wazo"
         android:permission="android.permission.BIND_TELECOM_CONNECTION_SERVICE">
         <intent-filter>
             <action android:name="android.telecom.ConnectionService" />
         </intent-filter>
-      </service>
+      </service> -->
     </application>
 </manifest>
